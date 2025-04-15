@@ -9,7 +9,20 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>这是后台首页</h2>
+    <h1>Login</h1>
+    <form action="/index/login" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
 </body>
 </html>
 {{ end }}

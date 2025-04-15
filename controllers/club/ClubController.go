@@ -66,4 +66,13 @@ func (club ClubController) SearchMember(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"member": member})
 }
 
+// func (club ClubController) AddMember1(c *gin.Context) {
+// 	var member models.Member
+// 	c.ShouldBindJSON(&member)
+// 	if err := models.DB.Create(&member); err != nil {
+// 		c.JSON(http.StatusOK, "fail to create")
+// 	}
+// 	c.JSON(http.StatusOK, member)
+// }
+
 //func(club ClubController)
