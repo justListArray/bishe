@@ -18,7 +18,7 @@ func init() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = DB.AutoMigrate(&User{})
+	err = DB.AutoMigrate()
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
