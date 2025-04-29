@@ -18,7 +18,7 @@ type PerdictController struct {
 }
 
 func (per PerdictController) Perdict(fixture int) gin.H {
-	fixture = 198772 //strReq队伍对应的id（fixture） ,我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
+	// fixture = 198772 //strReq队伍对应的id（fixture） ,我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
 	url := "https://v3.football.api-sports.io/predictions?fixture=" + strconv.Itoa(fixture)
 	method := "GET"
 
@@ -122,7 +122,7 @@ func QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname�
 // 通过teamid找到下一次的fixtureid
 func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	teamID := teamid
-	season := "2024"
+	season := "2023"
 	baseURL := "https://v3.football.api-sports.io/fixtures" //换成下场比赛的api  ?
 	params := url.Values{}
 	params.Add("team", strconv.Itoa(teamID))
@@ -148,6 +148,9 @@ func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"respose": string(body),
+	// })
 	// fmt.Println("Response Body:", string(body))
 	var response map[string]interface{}
 	err = json.Unmarshal(body, &response)
@@ -166,25 +169,30 @@ func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 		fmt.Println("No fixtures found for the specified team and season.")
 		return
 	}
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"respose": responseData,
+	// })
 
 	// 打印接下来几场比赛的信息
 	for _, fixtureData := range responseData {
-		fixture := fixtureData.(map[string]interface{})
-		fixtureID := int(fixture["fixture"].(map[string]interface{})["id"].(float64))
-		homeTeam := fixture["teams"].(map[string]interface{})["home"].(map[string]interface{})["name"].(string)
-		awayTeam := fixture["teams"].(map[string]interface{})["away"].(map[string]interface{})["name"].(string)
+		fixtureArray := fixtureData.(map[string]interface{})
+		fixtureID := int(fixtureArray["fixture"].(map[string]interface{})["id"].(float64))
+		homeTeam := fixtureArray["teams"].(map[string]interface{})["home"].(map[string]interface{})["name"].(string)
+		awayTeam := fixtureArray["teams"].(map[string]interface{})["away"].(map[string]interface{})["name"].(string)
 
 		fmt.Printf("Fixture ID: %d\n", fixtureID)
 		fmt.Printf("Home Team: %s\n", homeTeam)
 		fmt.Printf("Away Team: %s\n", awayTeam)
 		fmt.Println("--------------------")
+		fixture = fixtureID
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": responseData,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"message": responseData,
+	// })
 
 	return fixture
 }
+
 func (per PerdictController) Prediction(c *gin.Context) {
 	//完成我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
 	//下一场：
@@ -193,8 +201,8 @@ func (per PerdictController) Prediction(c *gin.Context) {
 	fixture := QueryTeamNextFixture(CopyFixture, c)
 	fmt.Println(fixture)
 	fmt.Println(CopyFixture)
-	//keyInfo := PerdictController.Perdict(per, fixture)
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"message": keyInfo,
-	// })
+	keyInfo := PerdictController.Perdict(per, fixture)
+	c.JSON(http.StatusOK, gin.H{
+		"message": keyInfo,
+	})
 }
