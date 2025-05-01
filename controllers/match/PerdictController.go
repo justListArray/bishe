@@ -28,7 +28,7 @@ func (per PerdictController) Perdict(fixture int) gin.H {
 	if err != nil {
 		fmt.Println(err)
 	}
-	req.Header.Add("x-rapidapi-key", "aa8bc3a99aeedaedab0dfe40555e4386")
+	req.Header.Add("x-rapidapi-key", models.ApiKey)
 	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
 
 	res, err := client.Do(req)
@@ -89,7 +89,7 @@ func QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname�
 	if err != nil {
 		fmt.Println(err)
 	}
-	req.Header.Add("x-rapidapi-key", "aa8bc3a99aeedaedab0dfe40555e4386")
+	req.Header.Add("x-rapidapi-key", models.ApiKey)
 	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
 
 	res, err := client.Do(req)
@@ -134,7 +134,7 @@ func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	req.Header.Add("x-rapidapi-key", "aa8bc3a99aeedaedab0dfe40555e4386")
+	req.Header.Add("x-rapidapi-key", models.ApiKey)
 	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
 
 	client := &http.Client{}

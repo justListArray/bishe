@@ -13,5 +13,7 @@ func ClubRouterInit(r *gin.Engine) {
 		ClubRouters.GET("/delete", club.ClubController{}.DeleteMember)
 		ClubRouters.GET("/add", club.ClubController{}.AddMember)
 		ClubRouters.GET("/search", club.ClubController{}.SearchMember)
+		ClubRouters.GET("/addTeam", club.ClubController{}.AddTeamPlayer)
+		//ClubRouters.GET("/analyse", club.ClubController{}.AnalysePlayer)
 	}
 }

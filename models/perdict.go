@@ -1,5 +1,9 @@
 package models
 
+var ApiKey string = "aa8bc3a99aeedaedab0dfe40555e4386"
+
+//"4b6be06397790250c20884bc099796a5"
+
 type PResponse struct {
 	Predictions struct {
 		Winner struct {
