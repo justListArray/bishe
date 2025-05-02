@@ -1,11 +1,9 @@
 package match
 
 import (
-	"encoding/json"
 	"fmt"
 	"footballsys/controllers/base"
 	"footballsys/models"
-	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -17,40 +15,11 @@ type PerdictController struct {
 	base.BaseController
 }
 
-func (per PerdictController) Perdict(fixture int) gin.H {
+func (per PerdictController) Perdict(fixture int, c *gin.Context) gin.H {
 	// fixture = 198772 //strReq队伍对应的id（fixture） ,我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
 	url := "https://v3.football.api-sports.io/predictions?fixture=" + strconv.Itoa(fixture)
-	method := "GET"
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	req.Header.Add("x-rapidapi-key", models.ApiKey)
-	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
-
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Response Body:", string(body))
-	var response map[string]interface{} //  接收body
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"message": response,
-	// })
+	response := per.BaseController.PreOperation(c, url)
 	var strPerdiction models.PResponse
 	responseData := response["response"].([]interface{})[0].(map[string]interface{})
 	strPerdiction.Predictions.Winner.ID = int(responseData["predictions"].(map[string]interface{})["winner"].(map[string]interface{})["id"].(float64))
@@ -80,36 +49,11 @@ func (per PerdictController) Perdict(fixture int) gin.H {
 	return keyInfo
 }
 
-func QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname找到teamid
+func (per PerdictController) QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname找到teamid
 	url := "https://v3.football.api-sports.io/teams?name=" + name
-	method := "GET"
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	req.Header.Add("x-rapidapi-key", models.ApiKey)
-	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
+	response := per.BaseController.PreOperation(c, url)
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// fmt.Println("Response Body:", string(body))
-	var response map[string]interface{}
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// fmt.Println(response)
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"message": response,
-	// })
 	responseData := response["response"].([]interface{})[0].(map[string]interface{})
 	team := responseData["team"].(map[string]interface{})
 	teamId := team["id"].(float64)
@@ -120,7 +64,7 @@ func QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname�
 }
 
 // 通过teamid找到下一次的fixtureid
-func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
+func (per PerdictController) QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	teamID := teamid
 	season := "2023"
 	baseURL := "https://v3.football.api-sports.io/fixtures" //换成下场比赛的api  ?
@@ -128,41 +72,20 @@ func QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	params.Add("team", strconv.Itoa(teamID))
 	params.Add("season", season)
 	url1 := baseURL + "?" + params.Encode()
-	method := "GET"
-
-	req, err := http.NewRequest(method, url1, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	req.Header.Add("x-rapidapi-key", models.ApiKey)
-	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
-
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"respose": string(body),
-	// })
+	response := per.BaseController.PreOperation(c, url1)
 	// fmt.Println("Response Body:", string(body))
-	var response map[string]interface{}
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		fmt.Println(err)
-	}
-	if errors, ok := response["errors"].(map[string]interface{}); ok {
-		if seasonError, ok := errors["season"].(string); ok {
-			fmt.Println("Error:", seasonError)
-			return
-		}
-	}
+
+	// err := json.Unmarshal(body, &response)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// if errors, ok := response["errors"].(map[string]interface{}); ok {
+	// 	if seasonError, ok := errors["season"].(string); ok {
+	// 		fmt.Println("Error:", seasonError)
+	// 		return
+	// 	}
+	// }
+
 	responseData := response["response"].([]interface{})
 
 	if len(response) == 0 {
@@ -197,11 +120,11 @@ func (per PerdictController) Prediction(c *gin.Context) {
 	//完成我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
 	//下一场：
 	name := c.Query("name")
-	CopyFixture := QueryTeamID(name, c)
-	fixture := QueryTeamNextFixture(CopyFixture, c)
+	CopyFixture := per.QueryTeamID(name, c)
+	fixture := per.QueryTeamNextFixture(CopyFixture, c)
 	fmt.Println(fixture)
 	fmt.Println(CopyFixture)
-	keyInfo := PerdictController.Perdict(per, fixture)
+	keyInfo := PerdictController.Perdict(per, fixture, c)
 	c.JSON(http.StatusOK, gin.H{
 		"message": keyInfo,
 	})

@@ -25,6 +25,7 @@ func main() {
 	routers.ClubRouterInit(r)
 	routers.TrainRouterInit(r)
 	routers.PredictionRouterInit(r)
+	routers.PlayerRouterInit(r)
 
 	r.Run()
 }

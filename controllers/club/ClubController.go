@@ -1,12 +1,10 @@
 package club
 
 import (
-	"encoding/json"
 	"fmt"
 	"footballsys/controllers/base"
 	"footballsys/controllers/match"
 	"footballsys/models"
-	"io"
 
 	"net/http"
 	"strconv"
@@ -82,38 +80,20 @@ func (club ClubController) SearchMember(c *gin.Context) {
 // 重点
 func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么办
 	name := c.Query("name") //球队名字（英文）
-	teamid := match.QueryTeamID(name, c)
+	teamid := match.PerdictController.QueryTeamID(match.PerdictController(club), name, c)
 	season := 2021
 	url := "https://v3.football.api-sports.io/players?season=" + strconv.Itoa(season) + "&team=" + strconv.Itoa(teamid)
-	method := "GET"
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	req.Header.Add("x-rapidapi-key", models.ApiKey)
-	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	body, err := io.ReadAll(resp.Body)
-	fmt.Println("Response Body:", string(body))
-	var response map[string]interface{}
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		fmt.Println(err)
-	}
-	if errors, ok := response["errors"].(map[string]interface{}); ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": errors})
-		return
-	}
+	response := club.BaseController.PreOperation(c, url)
 	// c.JSON(http.StatusOK, gin.H{"message": response})
 	// 提取球员信息并保存到数据库
 	players := response["response"].([]interface{})
 	for _, player := range players {
 		playerMap := player.(map[string]interface{})
 		playerData := playerMap["player"].(map[string]interface{})
+		playerId, _ := playerData["id"].(float64)
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"ID": playerId,
+		// })
 		name, _ := playerData["name"].(string)
 		age, _ := playerData["age"].(float64)
 		// position := ""
@@ -125,6 +105,7 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么�
 		// 	jerseyNumber = int(playerData["jersey_number"].(float64))
 		// }
 		member := models.Member{
+			PlayerId: int(playerId),
 			Username: fmt.Sprintf("%s", name),
 			Identity: "Player",
 			Name:     name,
@@ -138,12 +119,3 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么�
 	c.JSON(http.StatusOK, gin.H{"message": "Players added successfully"})
 
 }
-
-// func (club ClubController) StatisticPlayer(c *gin.Context){
-
-// }
-
-// func (club ClubController) AnalysePlayer(c *gin.Context) {
-// 	players := c.Query("players")
-
-// }
