@@ -35,9 +35,9 @@ func (base BaseController) PreOperation(c *gin.Context, url string) (body map[st
 	if err != nil {
 		fmt.Println(err)
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"respose": string(bodyByte),
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"respose": string(bodyByte),
+	// })
 	var response map[string]interface{}
 	err = json.Unmarshal(bodyByte, &response)
 	if err != nil {

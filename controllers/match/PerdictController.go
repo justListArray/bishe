@@ -88,10 +88,10 @@ func (per PerdictController) QueryTeamNextFixture(teamid int, c *gin.Context) (f
 
 	responseData := response["response"].([]interface{})
 
-	if len(response) == 0 {
-		fmt.Println("No fixtures found for the specified team and season.")
-		return
-	}
+	// if len(response) == 0 {
+	// 	fmt.Println("No fixtures found for the specified team and season.")
+	// 	return
+	// }
 	// c.JSON(http.StatusOK, gin.H{
 	// 	"respose": responseData,
 	// })

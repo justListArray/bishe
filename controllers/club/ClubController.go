@@ -81,7 +81,7 @@ func (club ClubController) SearchMember(c *gin.Context) {
 func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么办
 	name := c.Query("name") //球队名字（英文）
 	teamid := match.PerdictController.QueryTeamID(match.PerdictController(club), name, c)
-	season := 2021
+	season := 2023
 	url := "https://v3.football.api-sports.io/players?season=" + strconv.Itoa(season) + "&team=" + strconv.Itoa(teamid)
 	response := club.BaseController.PreOperation(c, url)
 	// c.JSON(http.StatusOK, gin.H{"message": response})
