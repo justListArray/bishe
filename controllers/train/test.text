@@ -1,0 +1,9 @@
+{   
+    "userId":1234363,
+    "name":"Guillem Jaime",
+    "date":"2025-3-4",
+    "content":"Running Morning",
+    "intensity":"relax",
+    "duration":2,
+    "injury":false
+}

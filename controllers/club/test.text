@@ -1,0 +1,11 @@
+测试单例：
+
+{
+    "id": 1234321,          
+    "name": "Cristiano Ronaldo",
+    "identity":"player",
+    "age":41,
+    "username":"CR7"
+}
+
+测试球队："Barcelona"  "Real Madrid"

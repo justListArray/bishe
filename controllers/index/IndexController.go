@@ -59,5 +59,5 @@ func (index IndexController) Signin(c *gin.Context) { //ok
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add user"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "User added successfully:"})
+	c.JSON(http.StatusOK, gin.H{"message": user})
 }

@@ -1,16 +1,16 @@
 package models
 
 type Player struct {
-	id         int
-	name       string
-	Goal       int
-	Pass       int
-	Tackle     int
-	Foul       int
-	Yellowcard int
-	Redcard    int
+	Id         int    `json:"id" gorm:"int"`
+	Name       string `json:"name" gorm:"varchar(255)"`
+	Goal       int    `json:"goal" gorm:"int"`
+	Pass       int    `json:"pass" gorm:"int"`
+	Tackle     int    `json:"tackle" gorm:"int"`
+	Foul       int    `json:"foul" gorm:"int"`
+	Yellowcard int    `json:"yellowcard" gorm:"int"`
+	Redcard    int    `json:"redcard" gorm:"int"`
 }
 
 func TableName() string {
-	return "PlayerData"
+	return "players"
 }

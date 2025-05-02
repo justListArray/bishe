@@ -34,4 +34,7 @@ func main() {
 		return
 	}
 	fmt.Println(string(body))
+	// c.JSON(http.StatusOK,gin.H{
+	// 	"message":string(body),
+	// })
 }
