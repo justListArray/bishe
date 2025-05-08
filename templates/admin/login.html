@@ -1,0 +1,116 @@
+{{define "admin/login.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login and Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required>
+      </div>
+      <button type="submit">Login</button>
+      <p id="loginError" class="error"></p>
+    </form>
+  </div>
+
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      // 打印请求体
+      const requestBody = JSON.stringify({ username, password });
+      console.log('Request Body:', requestBody);
+
+      fetch('login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: requestBody
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 401) {
+          throw new Error('Invalid username or password');
+        } else {
+          throw new Error('An error occurred');
+        }
+      })
+      .then(data => {
+        alert('Login successful');
+        console.log('Response Data:', data);
+
+        // 登录成功后跳转到目标页面
+        window.location.href = 'test'; // 修改为你的目标页面路径
+      })
+      .catch(error => {
+        console.error('Error:', error); // 打印错误到控制台
+        document.getElementById('loginError').textContent = error.message;
+      });
+    });
+  </script>
+</body>
+</html>
+{{end}}

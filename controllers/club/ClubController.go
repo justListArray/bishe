@@ -78,7 +78,7 @@ func (club ClubController) SearchMember(c *gin.Context) {
 }
 
 // 重点
-func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么办
+func (club ClubController) AddTeamPlayer(c *gin.Context) {
 	name := c.Query("name") //球队名字（英文）
 	teamid := match.PerdictController.QueryTeamID(match.PerdictController(club), name, c)
 	season := 2023
@@ -91,6 +91,10 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么�
 		playerMap := player.(map[string]interface{})
 		playerData := playerMap["player"].(map[string]interface{})
 		playerId, _ := playerData["id"].(float64)
+		var existingMember models.Member
+		if err := models.DB.Where("player_id = ?", playerId).First(&existingMember).Error; err == nil {
+			continue // 如果球员已存在，则跳过
+		}
 		// c.JSON(http.StatusOK, gin.H{
 		// 	"ID": playerId,
 		// })
@@ -115,7 +119,5 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) { //如果重复怎么�
 		}
 		models.DB.Create(&member)
 	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "Players added successfully"})
-
 }

@@ -14,6 +14,6 @@ func IndexRouterInit(r *gin.Engine) {
 		IndexRouters.GET("/login", index.IndexController{}.Index1) //登录
 		IndexRouters.POST("login", index.IndexController{}.Login)
 		IndexRouters.GET("/signin", index.IndexController{}.Signin) //注册
-		IndexRouters.GET("/test", index.IndexController{}.Success)  //测试
+		IndexRouters.GET("/test", index.IndexController{}.Test)     //测试
 	}
 }

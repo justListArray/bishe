@@ -15,17 +15,17 @@ type IndexController struct {
 
 // var db *gorm.DB
 
-func (index IndexController) Success(c *gin.Context) {
-	c.String(200, "成功")
-}
-
-// func (index IndexController) fail(c *gin.Context) {
-// 	c.String(200, "失败")
-// }
-
-func (index IndexController) Index1(c *gin.Context) {
+//	func (index IndexController) fail(c *gin.Context) {
+//		c.String(200, "失败")
+//	}
+func (index IndexController) Test(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin/index.html", nil)
 }
+
+func (index IndexController) Index1(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/login.html", nil)
+}
+
 func (index IndexController) Login(c *gin.Context) {
 	// 定义一个结构体用于接收请求中的用户名和密码
 
@@ -33,7 +33,7 @@ func (index IndexController) Login(c *gin.Context) {
 	// 将请求中的 JSON 数据绑定到 loginReq 结构体中
 
 	if err := c.ShouldBindJSON(&Login1); err != nil {
-		c.HTML(http.StatusBadRequest, "admin/index.html", gin.H{"error": "Invalid request data"})
+		c.HTML(http.StatusBadRequest, "admin/login.html", gin.H{"error": "Invalid request data"})
 		return
 	}
 
