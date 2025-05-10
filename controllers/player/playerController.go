@@ -38,6 +38,10 @@ func NilOperation(num interface{}) (ret int) {
 	}
 }
 
+func (player PlayerController) AddPlayerInfo1(c *gin.Context) {
+
+}
+
 func (player PlayerController) AddPlayerInfo(c *gin.Context) {
 	var Player models.Player
 	season := "2023"

@@ -18,11 +18,11 @@ type IndexController struct {
 //	func (index IndexController) fail(c *gin.Context) {
 //		c.String(200, "失败")
 //	}
-func (index IndexController) Test(c *gin.Context) {
+func (index IndexController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin/index.html", nil)
 }
 
-func (index IndexController) Index1(c *gin.Context) {
+func (index IndexController) Login1(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin/login.html", nil)
 }
 
@@ -47,6 +47,10 @@ func (index IndexController) Login(c *gin.Context) {
 
 	// 如果查询成功，返回登录成功信息
 	c.JSON(http.StatusOK, user)
+}
+
+func (index IndexController) Signin1(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/signin.html", nil)
 }
 
 func (index IndexController) Signin(c *gin.Context) { //ok

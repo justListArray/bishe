@@ -1,0 +1,113 @@
+{{define "member/searchmember.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索球员</title>
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <h1>搜索球员</h1>
+    <form id="searchmemberForm" action="/club/search" method="GET">
+        <label for="name">球员姓名：</label>
+        <input type="text" id="name" name="name"><br><br>
+        <button type="submit">搜索</button>
+    </form>
+    <div id="results"></div> <!-- 用于显示搜索结果 -->
+</body>
+<script>
+    document.getElementById('searchmemberForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData); // 打印发送的 JSON 数据
+
+        // 发送POST请求到后端
+        fetch('/club/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // 打印返回的数据
+            // 处理返回的数据
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    
+    document.getElementById('searchmemberForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData); // 打印发送的 JSON 数据
+
+        // 发送POST请求到后端
+        fetch('/club/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // 打印返回的数据
+            displayResults(data.Player); // 显示搜索结果
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    function displayResults(player) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = ''; // 清空之前的搜索结果
+
+        if (player) {
+            const playerDiv = document.createElement('div');
+            playerDiv.innerHTML = `
+                <p>球员 ID: ${player.id}</p>
+                <p>用户名: ${player.username}</p>
+                <p>身份: ${player.identity}</p>
+                <p>姓名: ${player.name}</p>
+                <p>年龄: ${player.age}</p>
+            `;
+            resultsDiv.appendChild(playerDiv);
+        } else {
+            resultsDiv.innerHTML = '<p>未找到球员。</p>';
+        }
+    }
+</script>
+</html>
+
+{{end}}

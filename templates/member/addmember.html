@@ -1,0 +1,65 @@
+{{define "member/addmember.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <h1>Add Member</h1>
+    <form id="addMemberForm" action="/club/save" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="identity">Identity:</label>
+        <input type="text" id="identity" name="identity" required><br><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+        <label for="player_id">Player ID:</label>
+        <input type="number" id="player_id" name="player_id" required><br><br>
+        <button type="submit">Add Member</button>
+    </form>
+</body>
+<script>
+    document.getElementById('addMemberForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (key === 'age' || key === 'player_id') {
+                data[key] = Number(value); // 转换为数字
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData)
+        // 发送POST请求到后端
+        fetch('/club/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); // 弹出后端返回的消息
+            window.location.href = '/club/index'; // 重定向到添加球员的表单页面
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+</html>
+
+{{end}}

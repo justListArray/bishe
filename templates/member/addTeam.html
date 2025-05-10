@@ -1,0 +1,53 @@
+{{define "member/addTeam.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css"> -->
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <h1>Add Member</h1>
+    <form id="addTeamForm" action="/club/addTeam" method="POST">
+        <label for="Teamname">Teamname:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <button type="submit">Add Team</button>
+    </form>
+</body>
+<script>
+    document.getElementById('addTeamForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData)
+        // 发送POST请求到后端
+        fetch('/club/addTeam', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); // 弹出后端返回的消息
+            window.location.href = '/club/index'; // 重定向到添加球员的表单页面
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+</html>
+
+{{end}}

@@ -1,3 +1,4 @@
+{{define "admin/signin.html"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,21 +78,28 @@
 
     document.getElementById('registerForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      const username = document.getElementById('registerUsername').value;
-      const password = document.getElementById('registerPassword').value;
+      const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;   
+        });
 
-      fetch('/signin', {
-        method: 'GET',
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData)
+
+      fetch('/index/signin', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify(data)
       })
       .then(response => {
         if (response.ok) {
           return response.json();
         } else if (response.status === 400) {
-          throw new Error('Failed to add user');
+          throw new Error('Failed to register user');
         } else {
           throw new Error('An error occurred');
         }
@@ -99,6 +107,7 @@
       .then(data => {
         alert('Registration successful');
         console.log(data);
+        window.location.href = '/index/index'; // 重定向到添加球员的表单页面
       })
       .catch(error => {
         document.getElementById('registerError').textContent = error.message;
@@ -107,3 +116,4 @@
   </script>
 </body>
 </html>
+{{end}}

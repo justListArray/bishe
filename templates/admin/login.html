@@ -82,7 +82,7 @@
       const requestBody = JSON.stringify({ username, password });
       console.log('Request Body:', requestBody);
 
-      fetch('login', {
+      fetch('/index/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -103,7 +103,7 @@
         console.log('Response Data:', data);
 
         // 登录成功后跳转到目标页面
-        window.location.href = 'test'; // 修改为你的目标页面路径
+        window.location.href = '/index/index'; // 修改为你的目标页面路径
       })
       .catch(error => {
         console.error('Error:', error); // 打印错误到控制台

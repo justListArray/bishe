@@ -1,0 +1,59 @@
+{{define "member/deletemember.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>删除球员</title>
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <h1>删除球员</h1>
+    <form id="deleteMemberForm" action="/club/delete" method="POST">
+        <label for="id">球员ID:</label>
+        <input type="number" id="id" name="id"><br><br>
+        
+        <label for="id">球员名字:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <button type="submit">删除</button>
+</body>
+<script>
+    document.getElementById('deleteMemberForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (key === 'age' || key === 'player_id') {
+                data[key] = Number(value); // 转换为数字
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData)
+        // 发送POST请求到后端
+        fetch('/club/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); // 弹出后端返回的消息
+            window.location.href = '/club/index'; // 重定向到添加球员的表单页面
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+        
+</script>
+</html>
+
+{{end}}
