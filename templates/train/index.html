@@ -1,17 +1,43 @@
 {{define "train/index.html"}}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>训练</title>
-    <link rel="stylesheet" href="/static/css/member.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .navbar {
+          background-color: #007bff;
+        }
+        .carousel-inner img {
+          width: 100%;
+          height: 400px;
+          object-fit: cover;
+        }
+        .about, .news {
+          background-color: #f8f9fa;
+          padding: 2rem;
+        }
+        .news-item {
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          padding: 1rem;
+        }
+        .footer {
+          background-color: #007bff;
+          color: white;
+        }
+      </style>
+
 </head>
 <body>
     <h1>训练</h1>
     <a href="/train/add">添加球员训练信息</a> |
-    <a href="/train/search">搜索球员训练信息</a> 
+    <a href="/train/search">搜索球员训练信息</a> |
+    <a href="/index/index">返回</a> 
 </body>
 </html>
 

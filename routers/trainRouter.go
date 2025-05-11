@@ -15,6 +15,7 @@ func TrainRouterInit(r *gin.Engine) {
 		TrainRouters.GET("/index", train.TrainController{}.Index)
 		TrainRouters.GET("/add", train.TrainController{}.AddTraibInfo)
 		TrainRouters.POST("/add", train.TrainController{}.TrainAdd)
-		TrainRouters.GET("/search", train.TrainController{}.TrainSearch)
+		TrainRouters.GET("/search", train.TrainController{}.TrainSearch1)
+		TrainRouters.POST("/search", train.TrainController{}.TrainSearch)
 	}
 }

@@ -6,14 +6,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>球员能力管理系统</title>
-    <link rel="stylesheet" href="/static/css/member.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .navbar {
+            background-color: #007bff;
+        }
+        .carousel-inner img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        .about, .news {
+            background-color: #f8f9fa;
+            padding: 2rem;
+        }
+        .news-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+        .footer {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <h1>球员能力管理系统</h1>
-    <a href="/play/play">添加球员能力信息</a> |
-    <a href="/play/analynse">分析球员能力</a> 
+    <!-- 头部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="/index/index">
+            <img src="logo.png" alt="Football Club Logo" height="30">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/play/play">添加球员能力信息</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/play/analynse">分析球员能力</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/index/index">返回</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 页面内容 -->
+    <div class="container py-5">
+        <h1 class="text-center">球员能力管理系统</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="news-item mb-4">
+                    <img src="news1.jpg" alt="News Image 1" class="img-fluid mb-3">
+                    <h3>添加球员能力信息</h3>
+                    <p>在这里，您可以添加球员的能力信息，包括技术、体能和心理等方面的数据。</p>
+                    <a href="/play/play" class="btn btn-primary">添加能力信息</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="news-item mb-4">
+                    <img src="news2.jpg" alt="News Image 2" class="img-fluid mb-3">
+                    <h3>分析球员能力</h3>
+                    <p>通过我们的分析工具，您可以深入了解球员的能力表现，为训练和比赛提供科学依据。</p>
+                    <a href="/play/analynse" class="btn btn-primary">分析能力</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <footer class="footer text-center py-3">
+        <p>&copy; 2025 Football Club. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
 
 {{end}}

@@ -5,28 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Football Club</title>
-  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/styles.css"> -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    .navbar {
+      background-color: #007bff;
+    }
+    .carousel-inner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+    .about, .news {
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+    .news-item {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+    }
+    footer {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <!-- 头部导航栏 -->
-  <header class="bg-primary text-white py-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <img src="logo.png" alt="Football Club Logo" class="img-fluid">
-        </div>
-        <div class="col-md-8">
-          <nav class="d-flex justify-content-end">
-            <button class="btn btn-light mx-2" onclick="scrollToSection('home')">Home</button>
-            <button class="btn btn-light mx-2" onclick="scrollToSection('about')">About</button>
-            <button class="btn btn-light mx-2" onclick="scrollToSection('news')">News</button>
-            <button class="btn btn-light mx-2" onclick="scrollToSection('contact')">Contact</button>
-          </nav>
-        </div>
-      </div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="http://150.158.2.43:8080/index/index">
+      <img src="logo.png" alt="Football Club Logo" height="30">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/index/index">主页</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/club/index">球员信息管理系统</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/play/index">球员能力分析</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/predict">预测比赛</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/train/index">训练信息</a>
+        </li>
+      </ul>
     </div>
-  </header>
+  </nav>
 
   <!-- 轮播图 -->
   <section id="home" class="carousel slide" data-ride="carousel">
@@ -115,17 +149,6 @@
       if (slideIndex > slides.length) {slideIndex = 1}    
       slides[slideIndex-1].style.display = "block";  
       setTimeout(showSlides, 3000); // Change image every 3 seconds
-    }
-
-    function moveSlide(n) {
-      slideIndex += n;
-      if (slideIndex > slides.length) {slideIndex = 1}
-      if (slideIndex < 1) {slideIndex = slides.length}
-      showSlides();
-    }
-
-    function scrollToSection(sectionId) {
-      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>

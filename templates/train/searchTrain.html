@@ -1,0 +1,108 @@
+{{define "train/searchTrain.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索球员训练信息</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .navbar {
+          background-color: #007bff;
+        }
+        .carousel-inner img {
+          width: 100%;
+          height: 400px;
+          object-fit: cover;
+        }
+        .about, .news {
+          background-color: #f8f9fa;
+          padding: 2rem;
+        }
+        .news-item {
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          padding: 1rem;
+        }
+        .footer {
+          background-color: #007bff;
+          color: white;
+        }
+      </style>
+</head>
+
+<body>
+    <h1>搜索球员训练信息</h1>
+    <form id="searchmemberForm">
+        <label for="name">球员姓名:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="id">球员ID:</label>
+        <input type="number" id="id" name="id"><br><br>
+        <button type="submit">搜索</button>
+    </form>
+    <div id="results"></div> <!-- 用于显示搜索结果 -->
+</body>
+<script>
+    document.getElementById('searchmemberForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (key === 'id') {
+                data[key] = parseInt(value, 10); // 确保 id 是数字类型
+            } else {
+                data[key] = value;
+            }
+        }
+
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData); // 打印发送的 JSON 数据
+
+        // 发送POST请求到后端
+        fetch('/train/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // 打印返回的数据
+            displayResults(data); // 显示搜索结果
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    function displayResults(data) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = ''; // 清空之前的搜索结果
+
+        if (data.err) {
+            // 如果后端返回了错误消息
+            resultsDiv.innerHTML = `<p>${data.err}</p>`;
+        } else if (data.message) {
+            // 如果后端返回了消息
+            if (typeof data.message === 'string') {
+                resultsDiv.innerHTML = `<p>${data.message}</p>`;
+            } else {
+                // 如果返回的是训练次数信息
+                const trainCount = data.message.train_count;
+                const playerName = data.message.player_name || data.message.player_id;
+                resultsDiv.innerHTML = `<p>球员 ${playerName} 的训练次数: ${trainCount}</p>`;
+            }
+        } else {
+            // 如果返回的数据格式不正确
+            resultsDiv.innerHTML = '<p>未找到训练信息。</p>';
+        }
+    }
+</script>
+</html>
+{{end}}

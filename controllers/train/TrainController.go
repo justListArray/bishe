@@ -48,28 +48,43 @@ func (train TrainController) TrainAdd(c *gin.Context) { //添加训练信息
 	c.JSON(http.StatusOK, gin.H{"message": "Complete the training information successfully:"})
 }
 
+func (train TrainController) TrainSearch1(c *gin.Context) { //查询训练信息
+	c.HTML(http.StatusOK, "train/searchTrain.html", nil)
+}
 func (train TrainController) TrainSearch(c *gin.Context) { //查询训练信息
-	name := c.Query("name")
-	id := c.Query("user_id")
-	var a models.Train
-	if id == "" && name == "" {
+	var request struct {
+		PlayerId   int    `json:"id"`
+		PlayerName string `json:"name"`
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Printf("Error binding JSON data: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("训练的id:%d,训练的名字：%v", request.PlayerId, request.PlayerName)
+	// name := c.Query("name")
+	// id := c.Query("user_id")
+
+	if request.PlayerId == 0 && request.PlayerName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"err": "没找到member"})
 		return
 	}
-	if id != "" {
-		if err := models.DB.Where("user_id=?", id).First(&a).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search member by id"})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": a})
+	var trainCount int64
+	if request.PlayerId != 0 {
+		models.DB.Model(&models.Train{}).Where("user_id = ?", request.PlayerId).Count(&trainCount)
+		c.JSON(http.StatusOK, gin.H{"message": gin.H{"player_id": request.PlayerId, "train_count": trainCount}})
 		return
 	}
-	if name != "" {
-		if err := models.DB.Where("name=?", name).First(&a).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search member by name"})
+	if request.PlayerName != "" {
+		models.DB.Model(&models.Train{}).Where("name = ?", request.PlayerName).Count(&trainCount)
+		if trainCount == 0 {
+			c.JSON(http.StatusOK, gin.H{"message": "他没有训练"})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": a})
+
+		c.JSON(http.StatusOK, gin.H{"message": gin.H{"player_name": request.PlayerName, "train_count": trainCount}})
+
 		return
 	}
 
