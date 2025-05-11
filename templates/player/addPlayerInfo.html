@@ -1,0 +1,61 @@
+{{define "player/addPlayerInfo.html"}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加球员数据</title>
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <h1>添加球员数据</h1>
+    <form id="addmemberInfoForm" action="/play" method="GET">
+        <label for="name">球员姓名：</label>
+        <input type="text" id="name" name="name"><br><br>
+        <button type="submit">添加</button>
+    </form>
+    
+</body>
+<script>
+    document.getElementById('addmemberInfoForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        // 将表单数据转换为JSON格式
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData); // 打印发送的 JSON 数据
+
+        // 发送POST请求到后端
+        fetch('/play/play', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // 打印返回的数据
+            // 处理返回的数据
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    
+</script>
+</html>
+
+
+{{end}}

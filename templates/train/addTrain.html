@@ -1,0 +1,79 @@
+{{define "train/addTrain.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Training Information</h1>
+        <form id="trainForm">
+            <label for="trainName">Training Name:</label>
+            <input type="text" id="trainName" name="trainName" required>
+
+            <label for="trainDate">Training Date:</label>
+            <input type="date" id="trainDate" name="trainDate" required>
+
+            <label for="trainContent">Training Content:</label>
+            <textarea id="trainContent" name="trainContent" rows="4" required></textarea>
+
+            <label for="trainIntensity">Training Intensity:</label>
+            <input type="text" id="trainIntensity" name="trainIntensity" required>
+
+            <label for="trainDuration">Training Duration (minutes):</label>
+            <input type="number" id="trainDuration" name="trainDuration" required>
+
+            <label for="trainInjury">Injury (Yes/No):</label>
+            <input type="text" id="trainInjury" name="trainInjury" required>
+
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('trainForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const trainName = document.getElementById('trainName').value;
+            const trainDate = document.getElementById('trainDate').value;
+            const trainContent = document.getElementById('trainContent').value;
+            const trainIntensity = document.getElementById('trainIntensity').value;
+            const trainDuration = document.getElementById('trainDuration').value;
+            const trainInjury = document.getElementById('trainInjury').value === 'Yes';
+            const resultDiv = document.getElementById('result');
+
+            try {
+                const response = await fetch(`/train/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Name: trainName,
+                        Date: trainDate,
+                        Content: trainContent,
+                        Intensity: trainIntensity,
+                        Duration: parseInt(trainDuration, 10),
+                        Injury: trainInjury
+                    })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<p>Message: ${data.message}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
+
+{{end}}

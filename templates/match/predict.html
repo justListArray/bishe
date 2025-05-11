@@ -1,0 +1,58 @@
+{{define "match/predict.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Match Prediction</title>
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Football Match Prediction</h1>
+        <form id="predictionForm">
+            <label for="teamName">Enter Team Name:</label>
+            <input type="text" id="teamName" name="teamName" required>
+            <button type="submit">Get Prediction</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const teamName = document.getElementById('teamName').value;
+            console.log(teamName)
+            const resultDiv = document.getElementById('result');
+
+            try {
+                const response = await fetch(`/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: teamName })
+                });
+                const data = await response.json();
+                console.log(data)
+
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h2>Prediction Result</h2>
+                        <p><strong>Winner:</strong> ${data.message.Winner.name}</p>
+                        <p><strong>League:</strong> ${data.message.League.name}</p>
+                        <p><strong>Home Team:</strong> ${data.message.Teams.Home.name}</p>
+                        <p><strong>Away Team:</strong> ${data.message.Teams.Away.name}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
+{{end}}

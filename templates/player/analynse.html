@@ -1,0 +1,62 @@
+{{define "player/analynse.html"}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Analysis</title>
+    <link rel="stylesheet" href="/static/css/member.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Player Analysis</h1>
+        <table>
+            <tr>
+                <th>Statistic</th>
+                <th>Total</th>
+                <th>Best Player</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Goals</td>
+                <td>{{.TotalGoals}}</td>
+                <td>{{.BestGoalScorer.Name}}</td>
+                <td>{{.BestGoalScorer.Goal}}</td>
+            </tr>
+            <tr>
+                <td>Passes</td>
+                <td>{{.TotalPasses}}</td>
+                <td>{{.BestPasser.Name}}</td>
+                <td>{{.BestPasser.Pass}}</td>
+            </tr>
+            <tr>
+                <td>Tackles</td>
+                <td>{{.TotalTackles}}</td>
+                <td>{{.BestTackler.Name}}</td>
+                <td>{{.BestTackler.Tackle}}</td>
+            </tr>
+            <tr>
+                <td>Fouls</td>
+                <td>{{.TotalFouls}}</td>
+                <td>{{.BestFouler.Name}}</td>
+                <td>{{.BestFouler.Foul}}</td>
+            </tr>
+            <tr>
+                <td>Yellow Cards</td>
+                <td>{{.TotalYellowCards}}</td>
+                <td>{{.MostYellowCards.Name}}</td>
+                <td>{{.MostYellowCards.Yellowcard}}</td>
+            </tr>
+            <tr>
+                <td>Red Cards</td>
+                <td>{{.TotalRedCards}}</td>
+                <td>{{.MostRedCards.Name}}</td>
+                <td>{{.MostRedCards.Redcard}}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+
+{{end}}

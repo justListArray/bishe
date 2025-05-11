@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"footballsys/controllers/base"
 	"footballsys/models"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -116,11 +117,23 @@ func (per PerdictController) QueryTeamNextFixture(teamid int, c *gin.Context) (f
 	return fixture
 }
 
+func (per PerdictController) Prediction1(c *gin.Context) {
+	c.HTML(http.StatusOK, "match/predict.html", nil)
+}
 func (per PerdictController) Prediction(c *gin.Context) {
+	var response struct {
+		Teamname string `json:"name"`
+	}
 	//完成我们通过team_id 查询team的比赛，如果想要预测，就调用Predict
 	//下一场：
-	name := c.Query("name")
-	CopyFixture := per.QueryTeamID(name, c)
+	if err := c.ShouldBindJSON(&response); err != nil {
+		log.Printf("Error binding query data: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("队伍的名字:%v", response.Teamname)
+
+	CopyFixture := per.QueryTeamID(response.Teamname, c)
 	fixture := per.QueryTeamNextFixture(CopyFixture, c)
 	fmt.Println(fixture)
 	fmt.Println(CopyFixture)

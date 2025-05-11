@@ -12,7 +12,9 @@ func TrainRouterInit(r *gin.Engine) {
 	models.DB.AutoMigrate(&models.Train{})
 	{
 		//ClubRouters.GET("/login", club.clubController{}.Login)
-		TrainRouters.GET("/add", train.TrainController{}.TrainAdd)
+		TrainRouters.GET("/index", train.TrainController{}.Index)
+		TrainRouters.GET("/add", train.TrainController{}.AddTraibInfo)
+		TrainRouters.POST("/add", train.TrainController{}.TrainAdd)
 		TrainRouters.GET("/search", train.TrainController{}.TrainSearch)
 	}
 }

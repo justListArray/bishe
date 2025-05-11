@@ -7,5 +7,6 @@ import (
 )
 
 func PredictionRouterInit(r *gin.Engine) {
-	r.GET("/perdict", match.PerdictController{}.Prediction) //测试
+	r.GET("/predict", match.PerdictController{}.Prediction1) //测试
+	r.POST("/predict", match.PerdictController{}.Prediction)
 }

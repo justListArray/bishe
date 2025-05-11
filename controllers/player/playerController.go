@@ -1,34 +1,35 @@
 package player
 
 import (
+	"errors"
 	"fmt"
 	"footballsys/controllers/base"
 	"footballsys/models"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type PlayerController struct {
 	base.BaseController
 }
 
-func (player PlayerController) trans(c *gin.Context, name string) (id int) {
+func (player PlayerController) Trans(name string) (int, error) {
 
-	url := "https://v3.football.api-sports.io/players/profiles?search=" + name
-	response := base.BaseController.PreOperation(player.BaseController, c, url)
-	responseData := response["response"].([]interface{})
-	if len(response) == 0 {
-		fmt.Println("No fixtures found for the specified team and season.")
-		return
+	var existingPlayer models.Member
+	if err := models.DB.Where("name = ?", name).First(&existingPlayer).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Printf("Player with name %s not found in the database", name)
+			return 0, fmt.Errorf("player not found")
+		}
+		log.Printf("Error querying player: %v", err)
+		return 0, err
 	}
-	for _, PlayerData := range responseData {
-		playerArray := PlayerData.(map[string]interface{})
-		playerID := int(playerArray["player"].(map[string]interface{})["id"].(float64))
-		id = int(playerID)
-	}
-	return id
+	return existingPlayer.PlayerId, nil
+
 }
 func NilOperation(num interface{}) (ret int) {
 	if num == nil {
@@ -37,17 +38,39 @@ func NilOperation(num interface{}) (ret int) {
 		return int(num.(float64))
 	}
 }
+func (player PlayerController) Index(c *gin.Context) {
+	c.HTML(http.StatusOK, "player/index.html", nil)
 
+}
 func (player PlayerController) AddPlayerInfo1(c *gin.Context) {
+	c.HTML(http.StatusOK, "player/addPlayerInfo.html", nil)
 
 }
 
 func (player PlayerController) AddPlayerInfo(c *gin.Context) {
+	var request struct {
+		Name string `json:"name"`
+	}
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Printf("Error binding query data: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Println(request.Name)
 	var Player models.Player
 	season := "2023"
-	name := c.Query("name")
-	id := strconv.Itoa(player.trans(c, name))
-	url := "https://v3.football.api-sports.io/players?id=" + id + "&season=" + season
+	id, err := player.Trans(request.Name) //找不到id
+	if err != nil {
+		log.Printf("找不到id: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	id1 := strconv.Itoa(id)
+	if id == 0 {
+		fmt.Println("没有id")
+	}
+	log.Printf("%s的id:%d", request.Name, id)
+	url := "https://v3.football.api-sports.io/players?id=" + id1 + "&season=" + season
 	response := base.BaseController.PreOperation(player.BaseController, c, url)
 
 	responseData := response["response"].([]interface{})
@@ -55,15 +78,19 @@ func (player PlayerController) AddPlayerInfo(c *gin.Context) {
 		fmt.Println("No fixtures found for the specified team and season.")
 		return
 	}
+	log.Println(response)
 
 	for _, playerData := range responseData {
 		playerArray := playerData.(map[string]interface{})
-		Player.Id = int(playerArray["player"].(map[string]interface{})["id"].(float64))
+		Player.Id = id
+		log.Println(Player.Id)
 		Player.Name = playerArray["player"].(map[string]interface{})["name"].(string)
+		log.Println(Player.Name)
 		playerinfo := playerArray["statistics"].([]interface{})
 		//int(
 		goals := playerinfo[0].(map[string]interface{})["goals"].(map[string]interface{})["total"] //.(float64))
 		Player.Goal = NilOperation(goals)
+		log.Println(Player.Goal)
 		passes := playerinfo[0].(map[string]interface{})["passes"].(map[string]interface{})["total"] //xiu
 		Player.Pass = NilOperation(passes)
 		tackles := playerinfo[0].(map[string]interface{})["tackles"].(map[string]interface{})["total"]
@@ -75,7 +102,17 @@ func (player PlayerController) AddPlayerInfo(c *gin.Context) {
 		redcard := playerinfo[0].(map[string]interface{})["cards"].(map[string]interface{})["red"]
 		Player.Redcard = NilOperation(redcard)
 	}
-	models.DB.Create(&Player)
+	var existingPlayer models.Player
+	if err := models.DB.Where("id = ?", Player.Id).First(&existingPlayer).Error; err == nil {
+		// Player exists, update the existing record
+		models.DB.Model(&existingPlayer).Updates(Player)
+		log.Printf("Updated existing player: %v", Player.Name)
+	} else {
+		// Player does not exist, create a new record
+		models.DB.Create(&Player)
+		log.Printf("Created new player: %v", Player.Name)
+	}
+	log.Println(Player)
 
 	// if err := c.ShouldBindJSON(&Player); err != nil {
 	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -105,6 +142,7 @@ func (player1 PlayerController) AnalysePlayer(c *gin.Context) {
 		totalFouls += player.Foul
 		totalYellowCards += player.Yellowcard
 		totalRedCards += player.Redcard
+		// log.Printf("球员的信息:%+v", player)
 
 		if player.Goal > maxGoals {
 			maxGoals = player.Goal
@@ -132,18 +170,33 @@ func (player1 PlayerController) AnalysePlayer(c *gin.Context) {
 		}
 	}
 
-	fmt.Println("\nData Analysis:")
-	fmt.Printf("Total Goals: %d\n", totalGoals)
-	fmt.Printf("Total Passes: %d\n", totalPasses)
-	fmt.Printf("Total Tackles: %d\n", totalTackles)
-	fmt.Printf("Total Fouls: %d\n", totalFouls)
-	fmt.Printf("Total Yellow Cards: %d\n", totalYellowCards)
-	fmt.Printf("Total Red Cards: %d\n", totalRedCards)
+	analysisData := struct {
+		TotalGoals       int
+		TotalPasses      int
+		TotalTackles     int
+		TotalFouls       int
+		TotalYellowCards int
+		TotalRedCards    int
+		BestGoalScorer   models.Player
+		BestPasser       models.Player
+		BestTackler      models.Player
+		BestFouler       models.Player
+		MostYellowCards  models.Player
+		MostRedCards     models.Player
+	}{
+		TotalGoals:       totalGoals,
+		TotalPasses:      totalPasses,
+		TotalTackles:     totalTackles,
+		TotalFouls:       totalFouls,
+		TotalYellowCards: totalYellowCards,
+		TotalRedCards:    totalRedCards,
+		BestGoalScorer:   bestGoalScorer,
+		BestPasser:       bestPasser,
+		BestTackler:      bestTackler,
+		BestFouler:       bestFouler,
+		MostYellowCards:  mostYellowCards,
+		MostRedCards:     mostRedCards,
+	}
 
-	fmt.Printf("\nBest Goal Scorer: %s with %d goals\n", bestGoalScorer.Name, bestGoalScorer.Goal)
-	fmt.Printf("Best Passer: %s with %d passes\n", bestPasser.Name, bestPasser.Pass)
-	fmt.Printf("Best Tackler: %s with %d tackles\n", bestTackler.Name, bestTackler.Tackle)
-	fmt.Printf("Most Fouls: %s with %d fouls\n", bestFouler.Name, bestFouler.Foul)
-	fmt.Printf("Most Yellow Cards: %s with %d yellow cards\n", mostYellowCards.Name, mostYellowCards.Yellowcard)
-	fmt.Printf("Most Red Cards: %s with %d red cards\n", mostRedCards.Name, mostRedCards.Redcard)
+	c.HTML(http.StatusOK, "player/analynse.html", analysisData)
 }
