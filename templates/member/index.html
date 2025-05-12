@@ -1,6 +1,5 @@
 {{define "member/index.html"}}
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +11,7 @@
     .navbar {
       background-color: #007bff;
     }
-    .carousel-inner img {
+    .carousel img {
       width: 100%;
       height: 400px;
       object-fit: cover;
@@ -34,7 +33,6 @@
   </style>
 </head>
 <body>
-  <!-- 头部导航栏 -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="http://150.158.2.43:8080/index/index">
       <img src="logo.png" alt="Football Club Logo" height="30">
@@ -62,12 +60,21 @@
       </ul>
     </div>
   </nav>
-    <h1>球员信息管理系统</h1>
-    <a href="/club/add">添加球员</a> |
-    <a href="/club/delete">删除球员</a> |
-    <a href="/club/addTeam">添加球队成员</a> |
-    <a href="/club/search">搜索球员</a> |
-    <a href="/index/index">返回</a> |
+  <main class="container py-5">
+    <h1 class="text-center">球员信息管理系统</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <a href="/club/add" class="btn btn-primary btn-block mb-3">添加球员</a>
+        <a href="/club/delete" class="btn btn-secondary btn-block mb-3">删除球员</a>
+        <a href="/club/addTeam" class="btn btn-success btn-block mb-3">添加球队成员</a>
+        <a href="/club/search" class="btn btn-info btn-block mb-3">搜索球员</a>
+        <a href="/index/index" class="btn btn-warning btn-block">返回</a>
+      </div>
+    </div>
+  </main>
+  <footer class="footer text-center py-3">
+    <p>&copy; 2025 Football Club. All rights reserved.</p>
+  </footer>
 </body>
 </html>
 {{end}}
