@@ -135,6 +135,7 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) {
 		Name string `json:"name"`
 	}
 	err := c.ShouldBindJSON(&request) //球队名字（英文）
+	log.Printf("球队的名字%v", request.Name)
 	if err != nil {
 		log.Printf("Error binding JSON data: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

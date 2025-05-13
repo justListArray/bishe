@@ -7,6 +7,7 @@ import (
 )
 
 func PredictionRouterInit(r *gin.Engine) {
+	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	r.GET("/predict", match.PerdictController{}.Prediction1) //测试
 	r.POST("/predict", match.PerdictController{}.Prediction)
 }

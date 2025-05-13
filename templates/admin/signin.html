@@ -66,11 +66,15 @@
     <form id="registerForm">
       <div class="form-group">
         <label for="registerUsername">Username</label>
-        <input type="text" id="registerUsername" required>
+        <input type="text" id="registerUsername" name="username" required>
       </div>
       <div class="form-group">
         <label for="registerPassword">Password</label>
-        <input type="password" id="registerPassword" required>
+        <input type="password" id="registerPassword" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="registerIdentity">identity</label>
+        <input type="text" id="registerIdentity" name="identity" required>
       </div>
       <button type="submit">Register</button>
       <p id="registerError" class="error"></p>

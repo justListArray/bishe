@@ -9,8 +9,10 @@ import (
 
 func TrainRouterInit(r *gin.Engine) {
 	TrainRouters := r.Group("/train")
+	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	models.DB.AutoMigrate(&models.Train{})
 	{
+
 		//ClubRouters.GET("/login", club.clubController{}.Login)
 		TrainRouters.GET("/index", train.TrainController{}.Index)
 		TrainRouters.GET("/add", train.TrainController{}.AddTraibInfo)

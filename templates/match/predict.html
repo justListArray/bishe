@@ -77,14 +77,15 @@
             const teamName = document.getElementById('teamName').value;
             console.log(teamName)
             const resultDiv = document.getElementById('result');
-
+            
+            console.log(JSON.stringify({ name:teamName }))
             try {
                 const response = await fetch(`/predict`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name: teamName })
+                    body: JSON.stringify({ name:teamName })
                 });
                 const data = await response.json();
                 console.log(data)

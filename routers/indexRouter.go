@@ -9,6 +9,7 @@ import (
 
 func IndexRouterInit(r *gin.Engine) {
 	IndexRouters := r.Group("/index")
+
 	models.DB.AutoMigrate(&models.User{})
 	{
 		IndexRouters.GET("/login", index.IndexController{}.Login1) //登录

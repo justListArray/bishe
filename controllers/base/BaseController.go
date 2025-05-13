@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"footballsys/models"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,15 @@ func (base BaseController) PreOperation(c *gin.Context, url string) (body map[st
 		fmt.Println(err)
 	}
 	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		log.Printf("Error: API request failed with status code %d", res.StatusCode)
+		bodyByte, _ := io.ReadAll(res.Body)
+		log.Printf("Response body: %s", bodyByte)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "API request failed"})
+		return nil
+	}
 	bodyByte, err := io.ReadAll(res.Body)
+	log.Println(string(bodyByte))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -43,6 +52,7 @@ func (base BaseController) PreOperation(c *gin.Context, url string) (body map[st
 	if err != nil {
 		fmt.Println(err)
 	}
+	log.Printf("message:%+v", response)
 	if errors, ok := response["errors"].(map[string]interface{}); ok {
 		if seasonError, ok := errors["season"].(string); ok {
 			fmt.Println("Error:", seasonError)

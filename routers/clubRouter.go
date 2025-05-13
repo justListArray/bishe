@@ -2,6 +2,7 @@ package routers
 
 import (
 	"footballsys/controllers/club"
+
 	"footballsys/models"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,8 @@ import (
 
 func ClubRouterInit(r *gin.Engine) {
 	ClubRouters := r.Group("/club")
+
+	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	models.DB.AutoMigrate(&models.Member{})
 	{
 		//ClubRouters.GET("/login", club.clubController{}.Login)

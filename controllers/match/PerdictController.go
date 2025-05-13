@@ -52,8 +52,10 @@ func (per PerdictController) Perdict(fixture int, c *gin.Context) gin.H {
 
 func (per PerdictController) QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname找到teamid
 	url := "https://v3.football.api-sports.io/teams?name=" + name
-
+	//log.Println(name)
+	log.Printf("url:%s", url)
 	response := per.BaseController.PreOperation(c, url)
+	log.Println(response)
 
 	responseData := response["response"].([]interface{})[0].(map[string]interface{})
 	team := responseData["team"].(map[string]interface{})
@@ -61,6 +63,7 @@ func (per PerdictController) QueryTeamID(name string, c *gin.Context) (fixture i
 	// c.JSON(http.StatusOK, gin.H{
 	// 	"MESSAGE": teamId,
 	// })
+	log.Printf("teamid%f", teamId)
 	return int(teamId) //id
 }
 
@@ -113,7 +116,7 @@ func (per PerdictController) QueryTeamNextFixture(teamid int, c *gin.Context) (f
 	// c.JSON(http.StatusOK, gin.H{
 	// 	"message": responseData,
 	// })
-
+	log.Printf("fixture id:%d", fixture)
 	return fixture
 }
 
