@@ -17,5 +17,6 @@ func PlayerRouterInit(r *gin.Engine) {
 		PlayerRouters.POST("/play", player.PlayerController{}.AddPlayerInfo) //测试
 		// PlayerRouters.GET("/analynse", player.PlayerController{}.AnalysePlayer1)
 		PlayerRouters.GET("/analynse", player.PlayerController{}.AnalysePlayer)
+
 	}
 }
