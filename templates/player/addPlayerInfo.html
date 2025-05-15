@@ -87,7 +87,10 @@
         <input type="text" id="name" name="name"><br><br>
         <button type="submit">添加</button>
     </form>
-    
+    <div class="form-container">
+        <h2>球员数据条形图：</h2>
+        <img id="playerImage" src="" alt="Player Image">
+    </div>
 </body>
 <script>
     document.getElementById('addmemberInfoForm').addEventListener('submit', function(event) {
@@ -111,6 +114,7 @@
             },
             body: jsonData
         })
+        console.log(jsonData)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

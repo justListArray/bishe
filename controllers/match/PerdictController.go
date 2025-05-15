@@ -51,10 +51,11 @@ func (per PerdictController) Perdict(fixture int, c *gin.Context) gin.H {
 }
 
 func (per PerdictController) QueryTeamID(name string, c *gin.Context) (fixture int) { //通过teamname找到teamid
-	url := "https://v3.football.api-sports.io/teams?name=" + name
+	encodedTeamName := url.QueryEscape(name)
+	url1 := "https://v3.football.api-sports.io/teams?name=" + encodedTeamName
 	//log.Println(name)
-	log.Printf("url:%s", url)
-	response := per.BaseController.PreOperation(c, url)
+	log.Printf("url:%s", url1)
+	response := per.BaseController.PreOperation(c, url1)
 	log.Println(response)
 
 	responseData := response["response"].([]interface{})[0].(map[string]interface{})
@@ -71,7 +72,7 @@ func (per PerdictController) QueryTeamID(name string, c *gin.Context) (fixture i
 func (per PerdictController) QueryTeamNextFixture(teamid int, c *gin.Context) (fixture int) {
 	teamID := teamid
 	season := "2023"
-	baseURL := "https://v3.football.api-sports.io/fixtures" //换成下场比赛的api  ?
+	baseURL := "https://v3.football.api-sports.io/fixtures" //换成下场比赛的api
 	params := url.Values{}
 	params.Add("team", strconv.Itoa(teamID))
 	params.Add("season", season)

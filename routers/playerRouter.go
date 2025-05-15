@@ -8,6 +8,7 @@ import (
 )
 
 func PlayerRouterInit(r *gin.Engine) {
+	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	PlayerRouters := r.Group("/play")
 	models.DB.AutoMigrate(&models.Player{})
 	{

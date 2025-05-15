@@ -182,3 +182,26 @@ func (club ClubController) AddTeamPlayer(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Players added successfully"})
 }
+
+// func (club ClubController) SearchAllMember1(c *gin.Context) {
+// 	c.HTML(http.StatusOK, "member/searchAllMember.html", nil)
+// }
+
+func (club *ClubController) SearchAllMember(c *gin.Context) {
+	var players []models.Member
+	if err := models.DB.Find(&players).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法查询球员信息"})
+		return
+	}
+
+	// 将查询结果转换为 map[int]models.Member
+	playersMap := make(map[int]models.Member)
+	for _, player := range players {
+		playersMap[player.Id] = player
+	}
+
+	// 渲染模板并传递数据
+	c.HTML(http.StatusOK, "member/searchAllMember.html", gin.H{
+		"Members": playersMap,
+	})
+}

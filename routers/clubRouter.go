@@ -24,6 +24,8 @@ func ClubRouterInit(r *gin.Engine) {
 		ClubRouters.POST("/addTeam", club.ClubController{}.AddTeamPlayer)
 		ClubRouters.GET("/index", club.ClubController{}.Index)
 		ClubRouters.POST("/save", club.ClubController{}.SaveMember)
+		ClubRouters.GET("/all", (&club.ClubController{}).SearchAllMember)
+
 		//ClubRouters.GET("/analyse", club.ClubController{}.AnalysePlayer)
 	}
 }
