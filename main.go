@@ -27,6 +27,5 @@ func main() {
 	routers.PredictionRouterInit(r)
 	routers.PlayerRouterInit(r)
 	routers.AIRouterInit(r)
-
 	r.Run()
 }

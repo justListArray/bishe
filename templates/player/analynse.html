@@ -44,6 +44,19 @@
             background-color: #f8f9fa;
         }
     </style>
+    <script>
+        // 页面加载时动态设置Token
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token'); // 从localStorage读取Token
+            if (token) {
+                // 将Token添加到全局变量或隐藏字段中
+                document.getElementById('token-field').value = token;
+            } else {
+                alert('Token不存在请先登录');
+                window.location.href = '/index/login'; // 跳转到登录页面
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- 头部导航栏 -->

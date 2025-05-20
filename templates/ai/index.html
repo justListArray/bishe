@@ -31,6 +31,20 @@
       color: white;
     }
   </style>
+
+  <script>
+    // 页面加载时动态设置Token
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token'); // 从localStorage读取Token
+        if (token) {
+            // 将Token添加到全局变量或隐藏字段中
+            document.getElementById('token-field').value = token;
+        } else {
+            alert('Token不存在请先登录');
+            window.location.href = '/index/login'; // 跳转到登录页面
+        }
+    });
+</script>
 </head>
 <body>
   <!-- 头部导航栏 -->
@@ -53,7 +67,7 @@
           <a class="nav-link" href="http://150.158.2.43:8080/play/index">球员能力分析</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/predict">预测比赛</a>
+          <a class="nav-link" href="http://150.158.2.43:8080/pre/predict">预测比赛</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="http://150.158.2.43:8080/train/index">训练信息</a>
@@ -78,6 +92,11 @@
 <script>
     document.getElementById('aiAnswer').addEventListener('submit', function(event) {
         event.preventDefault(); // 阻止表单默认提交行为
+        const token = localStorage.getItem('token'); // 从localStorage读取Token
+          if (!token) {
+            console.error('Token不存在,请先登录');
+            return;
+          }
 
         // 获取表单数据
         const formData = new FormData(this);
@@ -106,6 +125,9 @@
         })
         .then(data => {
             console.log(data); // 打印返回的数据
+            console.log(data.choices);
+            console.log(data.choices[0].message);
+            console.log(data.choices[0].message.content);
             displayResults(data); // 显示搜索结果
         })
         .catch(error => {
@@ -116,10 +138,13 @@
     function displayResults(data) {
       const responseContainer = document.getElementById('results');
       responseContainer.innerHTML = ''; // 清空容器
-      
-      if (data.choices){
+    
+      if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
         const aIDiv = document.createElement('div');
-        aIDiv.innerHTML=`<p>回答: ${data.choices[0].message.content}</p>`
+        aIDiv.innerHTML = `<p>回答: ${data.choices[0].message.content}</p>`;
+        responseContainer.appendChild(aIDiv); // 将 aIDiv 添加到页面中
+      } else {
+        responseContainer.innerHTML = '<p>没有找到结果</p>';
       }
     }
    

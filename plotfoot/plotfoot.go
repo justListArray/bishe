@@ -56,10 +56,16 @@ func PlotFoot(player models.Player) (file string) {
 	p.NominalX(labels...)
 
 	// 保存图表到文件
-	if err := p.Save(10*vg.Inch, 6*vg.Inch, player.Name+"_analysis.png"); err != nil {
+	if err := p.Save(10*vg.Inch, 6*vg.Inch, "static/image/"+player.Name+"_analysis.png"); err != nil {
 		log.Fatalf("Failed to save plot: %v", err)
 	}
 
 	fmt.Println("Player analysis chart saved to player_analysis.png")
-	return "player_analysis.png"
+	imgPath := "static/image/" + player.Name + "_analysis.png"
+	if err := p.Save(10*vg.Inch, 6*vg.Inch, imgPath); err != nil {
+		log.Fatalf("Failed to save plot: %v", err)
+	}
+
+	fmt.Println("Player analysis chart saved to", imgPath)
+	return imgPath // 返回图片的相对路径
 }

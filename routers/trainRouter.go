@@ -9,6 +9,7 @@ import (
 
 func TrainRouterInit(r *gin.Engine) {
 	TrainRouters := r.Group("/train")
+	//TrainRouters.Use(models.CheckToken)
 	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	models.DB.AutoMigrate(&models.Train{})
 	{

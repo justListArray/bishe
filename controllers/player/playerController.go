@@ -8,7 +8,6 @@ import (
 	"footballsys/plotfoot"
 	"log"
 	"net/http"
-	"path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -115,8 +114,7 @@ func (player PlayerController) AddPlayerInfo(c *gin.Context) {
 		log.Printf("Created new player: %v", Player.Name)
 	}
 	log.Println(Player)
-	_ = plotfoot.PlotFoot(Player)
-	imgPath := filepath.Join("/home/ubuntu/football", Player.Name+"_analynse.png")
+	imgPath := plotfoot.PlotFoot(Player)
 
 	// if err := c.ShouldBindJSON(&Player); err != nil {
 	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -1,0 +1,117 @@
+{{define "admin/update.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Football Club</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    .navbar {
+      background-color: #007bff;
+    }
+    .carousel-inner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+    .about, .news {
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+    .news-item {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+    }
+    footer {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- 头部导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="http://150.158.2.43:8080/index/index">
+      <img src="logo.png" alt="Football Club Logo" height="30">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/index/index">主页</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/index/signin">注册</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/index/update">更新密码</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://150.158.2.43:8080/index/signin">删除用户</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h2>Update/h2>
+    <form id="UpdateForm">
+      <div class="form-group">
+        <label for="UpdateUsername">Username</label>
+        <input type="text" id="UpdateUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="UpdatePassword">Password</label>
+        <input type="password" id="UpdatePassword" required>
+      </div>
+      <button type="submit">Update</button>
+      <p id="UpdateError" class="error"></p>
+    </form>
+  </div>
+
+
+  <script>
+    document.getElementById('UpdateForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const username = document.getElementById('UpdateUsername').value;
+      const password = document.getElementById('UpdatePassword').value;
+
+      // 打印请求体
+      const requestBody = JSON.stringify({ username, password });
+      console.log('Request Body:', requestBody);
+
+      fetch('/index/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: requestBody
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 401) {
+          throw new Error('Invalid username or password');
+        } else {
+          throw new Error('An error occurred');
+        }
+      })
+      .then(data => {
+        alert('Update successful');
+        console.log('Response Data:', data);
+
+        // 登录成功后跳转到目标页面
+        window.location.href = '/index/login'; // 修改为你的目标页面路径
+      })
+      .catch(error => {
+        console.error('Error:', error); // 打印错误到控制台
+        document.getElementById('loginError').textContent = error.message;
+      });
+    });
+  </script>
+{{end}}

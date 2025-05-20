@@ -56,6 +56,19 @@
             align-self: center;
         }
     </style>
+    <script>
+        // 页面加载时动态设置Token
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token'); // 从localStorage读取Token
+            if (token) {
+                // 将Token添加到全局变量或隐藏字段中
+                document.getElementById('token-field').value = token;
+            } else {
+                alert('Token不存在请先登录');
+                window.location.href = '/index/login'; // 跳转到登录页面
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- 头部导航栏 -->
@@ -98,13 +111,13 @@
 
         // 获取表单数据
         const formData = new FormData(this);
-        const data = {};
+        const frontEndData = {}; // 使用 frontEndData 表示前端数据
         for (let [key, value] of formData.entries()) {
-            data[key] = value;
+            frontEndData[key] = value;
         }
+
         // 将表单数据转换为JSON格式
-        const jsonData = JSON.stringify(data);
-        console.log(jsonData); // 打印发送的 JSON 数据
+        const jsonData = JSON.stringify(frontEndData);
 
         // 发送POST请求到后端
         fetch('/play/play', {
@@ -114,22 +127,27 @@
             },
             body: jsonData
         })
-        console.log(jsonData)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
-        .then(data => {
-            console.log(data); // 打印返回的数据
+        .then(backEndData => { // 使用 backEndData 表示后端返回的数据
+            if (backEndData.Player && backEndData.responseData && backEndData.img) {
+                // 拼接完整的图片URL
+                const imageUrl = `http://150.158.2.43:8080/${backEndData.img}`;
+                // 显示球员图片
+                document.getElementById('playerImage').src = imageUrl;
+            }
+            console.log(backEndData); // 打印返回的数据
             alert('球员数据添加成功！');
         })
         .catch(error => {
             console.error('Error:', error);
+            alert('无法加载球员数据，请检查网络连接或稍后重试。');
         });
     });
-    
 </script>
 </html>
 

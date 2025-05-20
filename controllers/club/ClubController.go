@@ -28,7 +28,8 @@ func (club ClubController) Index(c *gin.Context) { //添加球员完成
 func (club ClubController) AddMember(c *gin.Context) { //添加球员完成
 	c.HTML(http.StatusOK, "member/addmember.html", nil)
 }
-func (club ClubController) SaveMember(c *gin.Context) {
+
+func (club ClubController) SaveMember(c *gin.Context) { //添加球员完成
 	var player models.Member
 	c.JSON(http.StatusOK, c)
 	if err := c.ShouldBindJSON(&player); err != nil {
@@ -43,6 +44,7 @@ func (club ClubController) SaveMember(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Player added successfully"})
 }
+
 func (club ClubController) DeleteMember1(c *gin.Context) {
 	c.HTML(http.StatusOK, "member/deletemember.html", nil)
 }

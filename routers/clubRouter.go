@@ -10,6 +10,7 @@ import (
 
 func ClubRouterInit(r *gin.Engine) {
 	ClubRouters := r.Group("/club")
+	//ClubRouters.Use(models.CheckToken)
 
 	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	models.DB.AutoMigrate(&models.Member{})

@@ -10,6 +10,7 @@ import (
 func PlayerRouterInit(r *gin.Engine) {
 	//r.Use(controllers.MiddleController{}.AuthMiddleware())
 	PlayerRouters := r.Group("/play")
+	//.Use(models.CheckToken)
 	models.DB.AutoMigrate(&models.Player{})
 	{
 		PlayerRouters.GET("/index", player.PlayerController{}.Index)

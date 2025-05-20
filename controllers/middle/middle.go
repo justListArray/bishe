@@ -2,9 +2,6 @@ package controllers
 
 import (
 	"footballsys/controllers/base"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 type MiddleController struct {
@@ -28,15 +25,15 @@ type MiddleController struct {
 // 	}
 // }
 
-func (mid MiddleController) AdminMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		userRole := c.MustGet("user_role").(string)
+// func (mid MiddleController) AdminMiddleware() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		userRole := c.MustGet("user_role").(string)
 
-		if userRole != "admin" {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
-			c.Abort()
-			return
-		}
-		c.Next()
-	}
-}
+// 		if userRole != "admin" {
+// 			c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+// 			c.Abort()
+// 			return
+// 		}
+// 		c.Next()
+// 	}
+// }
