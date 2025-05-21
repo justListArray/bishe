@@ -36,7 +36,7 @@ header logo img {
 }
 
 header nav btn {
-  background-color: #0056b3;
+  background-color: #48b300;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -78,7 +78,7 @@ news-item h3 {
 }
 
 footer {
-  background-color: #007bff;
+  background-color: #88ff00;
   color: white;
   text-align: center;
   padding: 10px;
