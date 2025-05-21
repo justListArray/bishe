@@ -47,25 +47,19 @@
           <a class="nav-link" href="http://150.158.2.43:8080/index/index">主页</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/club/index">球员信息管理系统</a>
+          <a class="nav-link" href="http://150.158.2.43:8080/index/login">登录</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/play/index">球员能力分析</a>
+          <a class="nav-link" href="http://150.158.2.43:8080/index/signin">注册</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/pre/predict">预测比赛</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/train/index">训练信息</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="http://150.158.2.43:8080/ai">AI问答</a>
+          <a class="nav-link" href="http://150.158.2.43:8080/index/delete">删除用户</a>
         </li>
       </ul>
     </div>
   </nav>
   <div class="container">
-    <h2>Delete/h2>
+    <h2>Delete</h2>
     <form id="DeleteForm">
       <button type="submit">注销账号</button>
     </form>
@@ -75,13 +69,21 @@
   <script>
     document.getElementById('DeleteForm').addEventListener('submit', function(event) {
       event.preventDefault();
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('No token found. Please log in.');
+        return;
+      }
+      console.log('Token:', token); // 调试：打印token
 
       fetch('/index/delete', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${token}` // 将token添加到请求头中
         },
-        body: requestBody
+        body: JSON.stringify({})
       })
       .then(response => {
         if (response.ok) {
@@ -95,7 +97,7 @@
       .then(data => {
         alert('Update successful');
         console.log('Response Data:', data);
-
+        localStorage.removeItem('token');
         // 登录成功后跳转到目标页面
         window.location.href = '/index/login'; // 修改为你的目标页面路径
       })

@@ -4,7 +4,7 @@ body {
   color: #333;
 }
 navbar {
-  background-color: #007bff;
+  background-color: #ff5100;
 }
 carousel-inner img {
   width: 100%;
@@ -22,11 +22,11 @@ news-item {
   padding: 1rem;
 }
 footer {
-  background-color: #007bff;
+  background-color: #ffb700;
   color: white;
 }
 header {
-  background-color: #007bff;
+  background-color: #ff6200;
   color: white;
 }
 

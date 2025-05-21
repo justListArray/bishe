@@ -55,7 +55,7 @@ func (index IndexController) Login(c *gin.Context) { //登录 // token 生成
 
 	// 查询数据库，检查用户名和密码是否匹配
 	var user models.User
-	if result := models.DB.Where("username = ? AND password = ?", Login1.username, Login1.password).First(&user); result.Error != nil {
+	if result := models.DB.Where("username = ? AND password = ?", Login1.username, Login1.password).Find(&user); result.Error != nil {
 		// 如果查询失败，返回错误信息
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
@@ -125,8 +125,8 @@ func (index IndexController) Signin(c *gin.Context) { //ok 注册 // token 生�
 }
 
 func (index IndexController) DeleteUserSession(userID int) (err error) { // 执行注销逻辑
-	_ = models.DB.Exec(`delete from users where id =?`, userID)
-	return nil
+	err1 := models.DB.Exec(`delete from users where id =?`, userID).Error
+	return err1
 }
 
 func (index IndexController) Logoff1(c *gin.Context) {
@@ -136,6 +136,7 @@ func (index IndexController) Logoff1(c *gin.Context) {
 // token 解析
 func (index IndexController) Logoff(c *gin.Context) { // 注销  找到数据库的数据，执行删除操作，因为在登录后才能注销，所以不需要判断是否存在该数据
 	tokenString := c.GetHeader("Authorization")
+	log.Println(tokenString)
 	if tokenString == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token is missing"})
 		return
@@ -146,6 +147,7 @@ func (index IndexController) Logoff(c *gin.Context) { // 注销  找到数据库
 		return
 	}
 	userID := claims.UserID
+	log.Println(claims)
 
 	// 从数据库中删除用户
 	err = index.DeleteUserSession(int(userID))
